@@ -35,7 +35,7 @@
   function elapsedText() {
     const active = state.running ? Date.now() - state.startedAt : 0;
     const seconds = Math.max(0, Math.floor((state.elapsedBeforeStart + active) / 1000));
-    return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    return `${Math.floor(seconds / 60)}分${String(seconds % 60).padStart(2, '0')}秒`;
   }
 
   function startTimer() {
@@ -217,16 +217,8 @@
     const turn = ensureResearchCanvas();
     const lead = turn.querySelector('.v4-turn-lead');
     const canvas = turn.querySelector('.v4-research-canvas');
-    const message = '好的。我将基于七年级1班《2025-2026红岭深康七年级下册期末复习综合（二）》的42份学生答卷和12道练习题开展逐题诊断，识别班级共性问题和不同学生群体的薄弱点';
     lead.textContent = '';
-    canvas.dataset.introPending = 'true';
-    for (const character of message) {
-      if (signal.aborted) throw Object.assign(new Error('已停止'), { name: 'AbortError' });
-      lead.textContent += character;
-      if (lead.textContent.length % 8 === 0) scrollLatest();
-      await wait(22, signal);
-    }
-    await wait(420, signal);
+    if (signal.aborted) throw Object.assign(new Error('已停止'), { name: 'AbortError' });
     delete canvas.dataset.introPending;
     canvas.classList.add('is-intro-visible');
     refreshIcons();
